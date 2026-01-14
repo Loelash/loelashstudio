@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Language, headerTranslations } from "@/lib/i18n";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaYoutube, FaSoundcloud } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 
 
 interface HeaderProps {
   language: Language;
-  onLanguageChange: (lang: Language) => void;
   onContact: (subject: string) => void;
 }
 
-export const Header = ({ language, onLanguageChange, onContact }: HeaderProps) => {
+export const Header = ({ language, onContact }: HeaderProps) => {
   const t = headerTranslations[language];
 
   const socialLinks = [
@@ -28,6 +27,11 @@ export const Header = ({ language, onLanguageChange, onContact }: HeaderProps) =
       icon: SiTiktok,
       href: "https://www.tiktok.com/@loelashmusic",
       label: "TikTok",
+    },
+    {
+      icon: FaSoundcloud,
+      href: "https://soundcloud.com/loelash",
+      label: "SoundCloud",
     },
   ];
 
@@ -50,7 +54,7 @@ export const Header = ({ language, onLanguageChange, onContact }: HeaderProps) =
             </button>
           </div>
 
-          {/* Navigation */}
+          {/* Social links (main navigation items could replace this container) */}
           <div className="hidden md:flex items-center space-x-4">
             {socialLinks.map((social) => {
               const Icon = social.icon;
@@ -70,28 +74,7 @@ export const Header = ({ language, onLanguageChange, onContact }: HeaderProps) =
           </div>
 
           {/* Right side */}
-          <div className="flex items-center space-x-4">
-            {/* Language Toggle */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => onLanguageChange('en')}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  language === 'en' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                EN
-              </button>
-              <span className="text-muted-foreground">|</span>
-              <button
-                onClick={() => onLanguageChange('it')}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  language === 'it' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                IT
-              </button>
-            </div>
-
+          <div className="flex items-center">
             {/* CTA Button */}
             <Button
               variant="cta"

@@ -25,7 +25,8 @@ interface MobileSectionProps {
   onContact: (subject: string) => void;
 }
 
-const heroImage = '/lovable-uploads/d60cfc4b-6c44-42b3-8a9d-f53c0c728f93.png';
+const heroImages = ['/image_color.jpg', '/image_bw.jpg'];
+const heroImage = heroImages[Math.floor(Math.random() * heroImages.length)];
 
 const MobileServiceSection = ({ quadrant, index, activeIndex, onVisible, onContact }: MobileSectionProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -148,7 +149,7 @@ export const HeroSection = ({ language, onContact }: HeroSectionProps) => {
       >
         {/* Base Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center transition-all duration-500"
+          className="absolute inset-0 bg-cover bg-center transition-all"
           style={{
             backgroundImage: `url('${heroImage}')`,
             filter: isAnyQuadrantHovered ? 'blur(4px)' : 'none'
@@ -157,7 +158,7 @@ export const HeroSection = ({ language, onContact }: HeroSectionProps) => {
 
         {/* Light overlay for text readability when hovered */}
         {isAnyQuadrantHovered && (
-          <div className="absolute inset-0 bg-black/20 transition-all duration-500" />
+          <div className="absolute inset-0 bg-black/20 transition-all" />
         )}
 
         {/* Quadrants */}
@@ -176,7 +177,7 @@ export const HeroSection = ({ language, onContact }: HeroSectionProps) => {
             onClick={() => onContact(`${quadrant.service.title} Service Inquiry`)}
           >
             {/* Service Content Overlay - Only visible when any quadrant is hovered */}
-            <div className={`absolute inset-0 transition-all duration-500 ${
+            <div className={`absolute inset-0 transition-all ${
               isAnyQuadrantHovered
                 ? 'opacity-100'
                 : 'opacity-0'
