@@ -1,5 +1,7 @@
-@import './styles/theme.css';
-@import './styles/animations.css';
+/* Token definitions must be inlined before Tailwind emits its layers. */
+@import './styles/fonts.css';
+@import './styles/tokens.css';
+@import './styles/base.css';
 
 @tailwind base;
 @tailwind components;

@@ -1,0 +1,217 @@
+/**
+ * Design tokens — the single vocabulary the whole site is built from.
+ *
+ * This file is the contract with the design system: every colour, type step,
+ * rhythm value and easing curve used in a component resolves to a token here.
+ * Components should never hard-code a hex, px size or duration. Retuning the
+ * visual identity means editing this file, not the components.
+ *
+ * Tiers:
+ *   1. Primitives  — raw values, no meaning attached (`--ink-*`, `--paper-*`)
+ *   2. Semantic    — role-based aliases the UI consumes (`--surface`, `--text`)
+ *   3. Component   — the few knobs specific to one element (`--wordmark-*`)
+ *
+ * shadcn/ui reads a fixed set of HSL-triplet variable names, so the semantic
+ * tier below doubles as its theme. Keep those names intact.
+ */
+
+@layer base {
+  :root {
+    /* ---------------------------------------------------------------- */
+    /* 1. Primitives                                                     */
+    /* ---------------------------------------------------------------- */
+
+    /* Neutral ramp, expressed as HSL triplets for shadcn compatibility. */
+    --ink-900: 0 0% 0%;
+    --ink-800: 0 0% 4%;
+    --ink-700: 0 0% 8%;
+    --ink-600: 0 0% 14%;
+    --ink-500: 0 0% 24%;
+    --ink-400: 0 0% 40%;
+    --ink-300: 0 0% 58%;
+    --ink-200: 0 0% 74%;
+    --ink-100: 0 0% 88%;
+    --paper: 0 0% 100%;
+
+    --signal-danger: 0 72% 51%;
+
+    /* ---------------------------------------------------------------- */
+    /* 2. Semantic — shadcn/ui theme surface                             */
+    /* ---------------------------------------------------------------- */
+
+    --background: var(--ink-900);
+    --foreground: var(--paper);
+
+    --card: var(--ink-800);
+    --card-foreground: var(--paper);
+
+    --popover: var(--ink-800);
+    --popover-foreground: var(--paper);
+
+    /* "primary" is the inverted pill/button treatment: white on black. */
+    --primary: var(--paper);
+    --primary-foreground: var(--ink-900);
+
+    --secondary: var(--ink-700);
+    --secondary-foreground: var(--paper);
+
+    --muted: var(--ink-700);
+    --muted-foreground: var(--ink-300);
+
+    --accent: var(--ink-600);
+    --accent-foreground: var(--paper);
+
+    --destructive: var(--signal-danger);
+    --destructive-foreground: var(--paper);
+
+    --border: var(--ink-600);
+    --input: var(--ink-600);
+    --ring: var(--ink-200);
+
+    --radius: 0.5rem;
+
+    /* ---------------------------------------------------------------- */
+    /* 3. Typography                                                     */
+    /* ---------------------------------------------------------------- */
+
+    /* Everything the site says, said in one face. */
+    --font-body: 'Helvetica Neue', Helvetica, system-ui, -apple-system,
+      'Segoe UI', sans-serif;
+
+    /*
+     * The brand voice: used by the wordmark and nothing else. Declared in
+     * src/styles/fonts.css.
+     */
+    --font-display: 'Titan One', 'Arial Black', 'Helvetica Neue', sans-serif;
+
+    /* Fluid steps: clamp(min, preferred, max) — no breakpoint jumps. */
+    --text-nav: clamp(0.75rem, 0.68rem + 0.35vw, 0.9rem);
+    --text-caption: clamp(0.7rem, 0.65rem + 0.25vw, 0.8rem);
+    --text-body: clamp(0.95rem, 0.9rem + 0.3vw, 1.075rem);
+    --text-lead: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+    --text-heading: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
+
+    --tracking-nav: 0.24em;
+    --tracking-tight: -0.02em;
+    --leading-body: 1.65;
+
+    /* ---------------------------------------------------------------- */
+    /* 4. Layout & rhythm                                                */
+    /* ---------------------------------------------------------------- */
+
+    /* Safe inset from the viewport edge for the fixed one-pager furniture. */
+    --edge-x: clamp(1.25rem, 4vw, 3.5rem);
+    --edge-y: clamp(1.25rem, 3.5vh, 2.75rem);
+
+    --space-2xs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1.25rem;
+    --space-lg: 2rem;
+    --space-xl: 3.5rem;
+    --space-2xl: 6rem;
+
+    --measure: 68ch;
+
+    /* ---------------------------------------------------------------- */
+    /* 5. Motion                                                         */
+    /* ---------------------------------------------------------------- */
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 200ms;
+    --duration-base: 400ms;
+    --duration-slow: 900ms;
+
+    /* ---------------------------------------------------------------- */
+    /* 6. Component tokens                                               */
+    /* ---------------------------------------------------------------- */
+
+    /*
+     * The wordmark is type, not artwork: it is sized by font-size and its
+     * width follows. "lorenzo1UP" in Titan One measures ~6.3× its font-size,
+     * which is how these steps were derived from the old artwork widths.
+     * Per-instance overrides use [--wordmark-size:…].
+     */
+    --wordmark-size: clamp(2.7rem, 9.8vw, 8.2rem);
+    --wordmark-tracking: 0.02em;
+
+    /* Outline only — transparent body, no fill, no shadow. */
+    --wordmark-stroke-width: 0.038em;
+    --wordmark-stroke-color: hsl(var(--foreground));
+
+    /* The mark's italic lean, matching the original artwork. */
+    --wordmark-slant: -7deg;
+
+    /*
+     * Nudge below dead-centre on the home page so the mark crosses the
+     * subject's neckline rather than their face.
+     */
+    --wordmark-offset-y: clamp(0px, 7vh, 84px);
+
+    /*
+     * The wave.
+     *
+     * The mark is not animated letter by letter — it is rasterised once and
+     * then read through a single continuous displacement field, so the
+     * distortion is homogeneous across the whole word and cuts through the
+     * middle of a glyph as readily as between two.
+     *
+     * The field is two travelling sines plus drifting simplex noise. The two
+     * periods are deliberately not integer multiples of each other, so the
+     * combination never repeats exactly. Lengths are in em and therefore
+     * rescale with --wordmark-size; the rest are unitless ratios.
+     */
+
+    /*
+     * Period of each layer. 4.2 and 6.7 share no factor, so the two sines only
+     * line up again after 67 of the first — a little under five minutes. The
+     * noise layer is longer still, so nobody sees this loop.
+     */
+    --wordmark-wave-duration: 4.2s;
+    --wordmark-wave-duration-2: 6.7s;
+    --wordmark-wave-drift: 10s;
+
+    /* How many swells sit across the word at once. */
+    --wordmark-wave-cycles: 1.25;
+    --wordmark-wave-cycles-2: 2.9;
+    --wordmark-wave-cycles-noise: 1.8;
+
+    /* Vertical travel, and the horizontal squash where the wave is steepest. */
+    --wordmark-wave-amplitude: 0.105em;
+    --wordmark-wave-sway: 0.085em;
+
+    /* Share of the field that comes from noise rather than the sines, 0–1. */
+    --wordmark-wave-noise: 0.34;
+
+    /*
+     * The two cues that read as depth rather than a flat wobble: crests
+     * magnify, as if leaning toward the viewer, and the top of the letters
+     * trails the bottom through the turn.
+     *
+     * These have to climb with the amplitude, not stay put. Travel on its own
+     * just makes the mark bob higher; it is the squash, the magnification and
+     * the lean that make a bigger wave read as a stronger wave.
+     */
+    --wordmark-wave-depth: 0.1;
+    --wordmark-wave-lean: 0.1em;
+
+    /*
+     * RGB split along the direction of travel. Held well below the rest: the
+     * brand is monochrome, so this should read as an edge catching the light,
+     * not as a glitch. Set it to 0 for a clean mono mark.
+     */
+    --wordmark-wave-aberration: 0.009em;
+
+    /* Scrim over the portrait so white furniture stays legible. */
+    --hero-scrim: linear-gradient(
+      to bottom,
+      hsl(var(--ink-900) / 0.5) 0%,
+      hsl(var(--ink-900) / 0.15) 32%,
+      hsl(var(--ink-900) / 0.2) 62%,
+      hsl(var(--ink-900) / 0.65) 100%
+    );
+
+    --marquee-duration: 90s;
+  }
+}

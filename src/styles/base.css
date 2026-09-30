@@ -1,0 +1,109 @@
+/* Base element styles and shared utilities, all expressed via tokens. */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+
+  /* Visible focus for keyboard users only — the design is otherwise chromeless. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Full viewport height that accounts for mobile browser chrome. */
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .marquee-track {
+    animation: marquee-scroll var(--marquee-duration) linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /*
+   * The wordmark: outline-only type. `-webkit-text-stroke` is the only way to
+   * stroke live text without dropping to SVG, and every current engine ships
+   * it under the prefix. Transparent body, no fill, no shadow.
+   *
+   * These properties are read straight back out by the wave (through
+   * `getComputedStyle`) and repainted into the texture, so this rule is the
+   * whole description of the mark — there is no second definition in JS.
+   */
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: var(--wordmark-size);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: var(--wordmark-tracking);
+    color: transparent;
+    -webkit-text-stroke: var(--wordmark-stroke-width) var(--wordmark-stroke-color);
+    text-shadow: none;
+  }
+
+  /*
+   * The live copy. It sets the layout box, so it must stay in flow and stay
+   * untransformed — the slant lives on the child, where it cannot widen the
+   * box the wave measures itself against.
+   *
+   * Once the canvas has something to show, the component hides this with
+   * `opacity-0` rather than `visibility` or `display`: it still has to occupy
+   * its box, and still has to be hit-testable for the link wrapped around it
+   * on /bio. The swap is a single frame, not a fade — the two copies sit on
+   * top of one another, so a crossfade would show the flat one ghosting behind
+   * the waved one for the length of the transition.
+   */
+  .wordmark-type {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .wordmark-slant {
+    display: inline-block;
+    transform: skewX(var(--wordmark-slant));
+  }
+
+  /*
+   * The wave. Positioned by the hook, which knows how far the field can push
+   * the mark past its box and sizes the texture to match.
+   */
+  .wordmark-canvas {
+    position: absolute;
+    pointer-events: none;
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
